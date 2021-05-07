@@ -9,11 +9,11 @@
     <div id="app">
       <h1>チュートリアルToDoリスト</h1>
 
-      <label for="test1"> <input type="radio" id="test1" name="status" value="すべて" />すべて</label>
-      <label for="test2"> <input type="radio" id="test2" name="status" value="作業中" />作業中</label>
-      <label for="test3"> <input type="radio" id="test3" name="status" value="完了" />完了</label>
+      <label for="test1"> <input type="radio" id="test1" name="status" value="すべて"  @change="countItems('all')" checked/>すべて</label>
+      <label for="test2"> <input type="radio" id="test2" name="status" value="作業中" @change="countItems('working')" />作業中</label>
+      <label for="test3"> <input type="radio" id="test3" name="status" value="完了" @change="countItems('done')" />完了</label>
 
-      （0 件を表示）
+      （{{ count }} 件を表示）
 
       <table>
         <thead>
@@ -25,37 +25,27 @@
           </tr>
         </thead>
         <tbody>
-          <tr class="done">
-            <th>1</th>
-            <td>テスト</td>
+          <tr v-for="(item, key) in itemSort" v-bind:class="{done: item.status=='done'}">
+            <th>{{ key+1 }}</th>
+            <td>{{ item.content }}</td>
             <td class="state">
-              <button>完了</button>
+              <button v-on:click="changeStatus(item.id)">{{ toJapanese(item.status) }}</button>
             </td>
             <td class="button">
-              <button>削除</button>
-            </td>
-          </tr>
-          <tr>
-            <th>2</th>
-            <td>テスト2</td>
-            <td class="state">
-              <button>作業中</button>
-            </td>
-            <td class="button">
-              <button>削除</button>
+              <button v-on:click="removeItem(item.id)">削除</button>
             </td>
           </tr>
         </tbody>
       </table>
 
       <h2>新しい作業の追加</h2>
-      <form class="add-form">
-        コメント <input type="text" name="comment" />
-        <button type="submit">追加</button>
+      <form class="add-form" v-on:submit.prevent>
+        コメント <input type="text" name="comment" v-model="newContent" />
+        <button type="submit" v-on:click="addItem">追加</button>
       </form>
     </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/vue"></script>
+    <script src="./vue.js"></script>
     <script src="./main.js"></script>
   </body>
 </html>
